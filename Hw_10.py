@@ -2,8 +2,19 @@ from collections import UserDict
 
 
 class AddressBook(UserDict):
-    pass
+    def set_name(self, name):
+        self.data['name'] = name
 
+    def get_name(self):
+        return self.data.get('name')
+
+    def set_phone(self, phone):
+        phone_list = self.data.get('phones', Phones())
+        phone_list.data.append(phone)
+        self.data['phones'] = phone_list
+
+    def get_phones(self):
+        return self.data.get('phones')
 
 class Record:
 
