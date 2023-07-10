@@ -1,3 +1,27 @@
+from collections import UserDict
+
+
+class AddressBook(UserDict):
+    def __init__(self):
+        self.contacts = []
+
+
+class Record:
+    pass
+
+
+class Field:
+    pass
+
+
+class Name:
+    pass
+
+
+class Phone:
+    pass
+
+
 phone_book = {}
 
 
@@ -17,10 +41,10 @@ def input_error(func):
 
 @input_error
 def add(args: tuple[str]) -> str:
-    name = args[0]
-    phone = args[1]
-    phone_book[name] = phone
-    return f"Add success {name}: {phone}"
+    name = Name(args[0])
+    phone = Phone(args[1])
+    rec = Record(name, phone)
+    return addressbook.add_rec(rec)
 
 
 @input_error
