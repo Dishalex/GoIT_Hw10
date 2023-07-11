@@ -2,27 +2,22 @@ from collections import UserDict
 
 
 class Field:
-    pass
+    def __init__(self, value):
+        self.value = value
 
 
 class Name(Field):
-    def __init__(self, value):
-        self.name = value
+    pass
 
 
 class Phone(Field):
-    def __init__(self, value):
-        self.phone = value
+    pass
 
 
 class AddressBook(UserDict):
 
     def add_record(self, record):
         self.data[record.name.name] = record
-
-    def get_phones(self):
-        for k, v in self.data.items():
-            print(k, v.name)
 
 
 class Record():
