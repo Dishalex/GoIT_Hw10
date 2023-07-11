@@ -1,7 +1,9 @@
 from collections import UserDict
 
+
 class Field:
     pass
+
 
 class Name(Field):
     def __init__(self, value):
@@ -11,48 +13,40 @@ class Name(Field):
 class Phone(Field):
     def __init__(self, value):
         self.phone = value
-        
-        
+
+
 class AddressBook(UserDict):
-    
+
     def add_record(self, record):
         self.data[record.name.name] = record
-    
-    def del_record(self, name):
-        if self.data.pop(name, None):
-            f'Contact {name} was removed from addres book.'
-        return f'There is no {name} in address book to delete.'
-        
-
 
     def get_phones(self):
-        return self.data.get('phones')
-    
-    def add_record(self, record):
-        self.data[record.name.name] = record
-        
+        for k, v in self.data.items():
+            print(k, v.name)
 
-addressbook = AddressBook()
 
 class Record():
     contacts = []
+    name = None
+
     def __init__(self, name, *phones):
         self.name = name
-        self.contacts.append(phones)
-     
+        for phone in phones:
+            self.contacts.append(phone)
 
-        
-def add(args = ('Alex', '012345687', '123456489', '4562')):#args: tuple[str]) -> str:
-    name = Name(args[0])
-    phone = Phone(args[1:])
-    rec = Record(name, phone)
-    return addressbook.add_record(rec)
+    def add_phone(self, *phones):
+        for phone in phones:
+            self.contacts.append(phone)
 
-rec = add()
-rec = add(('Alex1', '0123', '123489'))
-print(addressbook)
-print(addressbook.del_record('Alex1'))
+    def del_phone(self, *phones):
+        for phone in phones:
+            if phone in self.contacts:
+                self.contacts.delete(phone)
 
+    def change_phone(self, old, new):
+        if old in self.contacts:
+            self.contacts.delete(old)
+            self.contacts.append(new)
 
 
 def input_error(func):
