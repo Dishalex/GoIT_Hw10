@@ -29,9 +29,19 @@ class Record():
             self.phones.append(phone)
     
     def add_phone(self, phone: Phone):
-        self.phones.append(phone)
-        return f'Contact {self.name} was updated with phone {phone}'
+        if phone.value not in [p.value for p in self.phones]:
+            self.phones.append(phone)
+            return f'Contact {self.name} was updated with phone {phone}.'
+        return f'Phone "{phone}" is already belong to contact with name "{self.name}".'
     
+    def change_phone(self, old_p: Phone, new_p: Phone):
+        for indx, p in enumerate(self.phones):
+            if old_p.value == p.value:
+                self.phones[indx] = new_p
+                return f'Contacts "{self.name}" phone "{old_p}" changed to "{new_p}".'    
+        return f'Contact "{self.name}" has no phone "{old_p}" to change.'    
+        
+        
     def __str__(self) -> str:
         return f"{self.name}: {', '.join(str(p) for p in self.phones)}"
 #     def add_phone(self, *phones):
@@ -43,10 +53,7 @@ class Record():
 #             if phone in self.contacts:
 #                 self.contacts.delete(phone)
 # 
-#     def change_phone(self, old, new):
-#         if old in self.contacts:
-#             self.contacts.delete(old)
-#             self.contacts.append(new)
+
             
     
 class AddressBook(UserDict):
@@ -55,8 +62,9 @@ class AddressBook(UserDict):
         return f"Contact {record} was added"
     
     def __str__(self) -> str:
-        return '\n'.join(str(r) for r in self.values())
-
+        if self.data:
+            return '\n'.join(str(r) for r in self.values()) + '\n' + '...the end of phone book.'
+        return 'Address book is empty'
 
 
 

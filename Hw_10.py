@@ -7,10 +7,12 @@ def input_error(func):
             return func(args)
         except Exception as err:
             return err
-#              if err:
-#                  if func.__name__ == 'show_command':
-#                      return 'Input name after command'
-#                  return 'Input name and phone number after command'
+#             if err:
+#                 if func.__name__ == 'show_command':
+#                     return 'Input name after command'
+#                 elif func.__name__'change_command':
+#                     
+#                 return 'Input name and phone number after command'
     return wrapper
 
 
@@ -18,7 +20,7 @@ def input_error(func):
 def add_command(args: tuple[str]) -> str:
     name = Name(args[0])
     phone = Phone(args[1])
-    rec: Record = address_book.get(str(name))
+    rec: Record = address_book.get(str(name))  # перенести на початок функції
     if rec:
         return rec.add_phone(phone)
     rec = Record(name, phone)
@@ -26,11 +28,13 @@ def add_command(args: tuple[str]) -> str:
 
 @input_error
 def change_command(args: tuple[str]) -> str:
-    pass
-#     name = args[0]
-#     phone = args[1]
-#     phone_book[name] = phone
-#     return f"Contact '{name}' was succesfuly updated with phone: {phone}"
+    name = Name(args[0])
+    old_p = Phone(args[1])
+    new_p = Phone(args[2])
+    rec: Record = address_book.get(str(name)) # перенести на початок функції
+    if rec:
+        return rec.change_phone(old_p, new_p)
+    return f'No contact with name "{name}" in address book'
 
 
 @input_error
@@ -44,14 +48,6 @@ def show_command(name: tuple[str]) -> str:
 
 def show_all_command(*args) -> str:
     return address_book
-#     if phone_book:
-#         s = ''
-#         for name, phone in sorted(phone_book.items()):
-#             s += f'{name}: {phone}'
-#             s += '\n'
-#         return s + '...the end of phone book.'
-#     return 'Phone book is empty'
-
 
 def no_command():
     return 'Unknown command'
