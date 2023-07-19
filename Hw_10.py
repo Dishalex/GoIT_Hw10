@@ -6,13 +6,15 @@ def input_error(func):
         try:
             return func(args)
         except Exception as err:
-            return err
-#             if err:
-#                 if func.__name__ == 'show_command':
-#                     return 'Input name after command'
-#                 elif func.__name__'change_command':
-#                     
-#                 return 'Input name and phone number after command'
+            if func.__name__ == 'add_command':
+                return 'Please specify contact name and phone after command'
+            elif func.__name__ == 'change_command':
+                return 'Please specify contact name, old phone and new phone after command'
+            elif func.__name__ == 'delete_phone_command':
+                return 'Please specify contact name and phone after command'
+            elif func.__name__ == 'show_command':
+                return 'Please specify contact name after command'
+            return 'Please try again'
     return wrapper
 
 
@@ -20,7 +22,7 @@ def input_error(func):
 def add_command(args: tuple[str]) -> str:
     name = Name(args[0])
     phone = Phone(args[1])
-    rec: Record = address_book.get(str(name))  # перенести на початок функції
+    rec: Record = address_book.get(str(name))
     if rec:
         return rec.add_phone(phone)
     rec = Record(name, phone)
@@ -29,22 +31,30 @@ def add_command(args: tuple[str]) -> str:
 @input_error
 def change_command(args: tuple[str]) -> str:
     name = Name(args[0])
-    old_p = Phone(args[1])
-    new_p = Phone(args[2])
-    rec: Record = address_book.get(str(name)) # перенести на початок функції
+    rec: Record = address_book.get(str(name))
     if rec:
+        old_p = Phone(args[1])
+        new_p = Phone(args[2])
         return rec.change_phone(old_p, new_p)
     return f'No contact with name "{name}" in address book'
 
+@input_error
+def delete_phone_command(args: tuple[str]) -> str:
+    name = Name(args[0])
+    rec: Record = address_book.get(str(name))
+    if rec:
+        phone_to_delete = Phone(args[1])
+        return rec.del_phone(phone_to_delete)
+    return f'No contact with name "{name}" in address book'
 
 @input_error
-def show_command(name: tuple[str]) -> str:
-    pass
-#     if name[0] in phone_book:
-#         return f'{name[0]} has number {phone_book[name[0]]}'
-#     else:
-#         return f'There is no phone number for {name[0]}'
-
+def show_command(args: tuple[str]) -> str:
+    name = Name(args[0])
+    rec: Record = address_book.get(str(name))
+    if rec:
+        return rec
+    else:
+        f'No contact with name "{name}" in address book'
 
 def show_all_command(*args) -> str:
     return address_book
@@ -63,17 +73,19 @@ def hello_command() -> str:
 
 COMMANDS = {
     add_command: ('add', '+', 'додати'),
+    delete_phone_command: ('delete', '-', 'видалити', 'del'),
     change_command: ('change', 'змінити'),
-    exit_command: ('close', 'exit', 'вийти' 'закрити'),
+    exit_command: ('close', 'exit', 'вийти' 'закрити', 'bye'),
     hello_command: ('hello', 'привіт'),
-    show_command: ('phone', 'show', 'телефон'),
-    show_all_command: ('show_all', 'show all', 'all', 'всі', 'телефони')
+    show_command: ('phone', 'show', 'contact', 'телефон', 'контакт'),
+    show_all_command: ('show_all', 'all', 'всі', 'книга')
     }
         
 def parser(text: str) -> tuple[callable, list[str]]:
-    command, *data = text.strip().split()
+    command, *data = text.strip().split() 
     for cmd, kwds in COMMANDS.items():
-        if command.lower() in kwds:
+        if command.lower() in kwds: #спробував відмовитися від .startswith(), оскільки цей метод не достатньо специфічний.
+                                    #як наслідок не спиймаються команди довше ніж 1 слово
             return cmd, data
     return no_command, []
 
