@@ -16,10 +16,6 @@ class Phone(Field):
 
 class Name(Field):
     pass
-# 
-# class Phone(Field):
-#     pass
-
 
 class Record():
     def __init__(self, name: Name, phone: Phone = None) -> None:
@@ -40,21 +36,18 @@ class Record():
                 self.phones[indx] = new_p
                 return f'Contacts "{self.name}" phone "{old_p}" changed to "{new_p}".'    
         return f'Contact "{self.name}" has no phone "{old_p}" to change.'    
-        
-        
-    def __str__(self) -> str:
-        return f"{self.name}: {', '.join(str(p) for p in self.phones)}"
-#     def add_phone(self, *phones):
-#         for phone in phones:
-#             self.contacts.append(phone)
-# 
-#     def del_phone(self, *phones):
-#         for phone in phones:
-#             if phone in self.contacts:
-#                 self.contacts.delete(phone)
-# 
+    
+    def del_phone(self, phone_to_remove: Phone):
+        for indx, p in enumerate(self.phones):
+            print(phone_to_remove.value == p.value)
+            if phone_to_remove.value == p.value:
+                del self.phones[indx]
+                return f'Contacts "{self.name}" phone "{phone_to_remove}" was removed".'    
+        return f'Contact "{self.name}" has no phone "{phone_to_remove}" to remove.'    
 
-            
+    def __str__(self) -> str:
+        return f"{self.name}: {', '.join(str(p) for p in self.phones)}"           
+    
     
 class AddressBook(UserDict):
     def add_record(self, record: Record):
@@ -65,6 +58,3 @@ class AddressBook(UserDict):
         if self.data:
             return '\n'.join(str(r) for r in self.values()) + '\n' + '...the end of phone book.'
         return 'Address book is empty'
-
-
-
